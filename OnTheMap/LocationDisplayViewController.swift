@@ -29,15 +29,22 @@ class LocationDisplayViewController: UIViewController {
         disableUI(enabled: false)
         self.navigationItem.leftBarButtonItem?.title = "Logging Out"
         UdacityAPIClient.deleteUdacitySession(baseURL: "https://www.udacity.com/api/", pathExtension: "session", completionHandler: {(success, error) in
-            if success == true {
-                // Maybe do something with the UI as things are logging out, AND THEN!
-                
-                let controller: UIViewController
-                controller = (self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController"))!
-                self.present(controller, animated: true, completion: nil)
-            } else {
-                self.disableUI(enabled: true)
-                self.navigationItem.leftBarButtonItem?.title = "Log Out"
+            
+            DispatchQueue.main.async {
+
+                if success == true {
+                    // Maybe do something with the UI as things are logging out, AND THEN!
+                    
+                    print("logging out and removing annotations")
+
+                    
+                    let controller: UIViewController
+                    controller = (self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController"))!
+                    self.present(controller, animated: true, completion: nil)
+                } else {
+                    self.disableUI(enabled: true)
+                    self.navigationItem.leftBarButtonItem?.title = "Log Out"
+                }
             }
         
         })

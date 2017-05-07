@@ -22,6 +22,7 @@ class ParseAPIConvenience {
         
         let httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\", \"latitude\": \(latitude), \"longitude\": \(longitude)}"
         
+        print(httpBody)
         ParseAPIClient.performParsePUTRequest(baseURL: urlString, httpBody: httpBody, completionHandler: {(success, errorString, results, response) in
             if !success {
                 completionHandler(false, "Could not update student.")

@@ -123,6 +123,7 @@
 				TargetAttributes = {
 					4915BABB1EBA519600641D2E = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = YS796748CB;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -298,6 +299,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = YS796748CB;
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ashduckett.OnTheMap;
@@ -310,6 +312,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = YS796748CB;
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ashduckett.OnTheMap;

@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +27,10 @@ class ViewController: UIViewController {
         
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {(action) in
                 self.dismiss(animated: true, completion: nil)
+            
+                self.loginButton.isEnabled = true
+                self.loginButton.setTitle("Log In", for: .disabled)
+            
             }
         
             alertController.addAction(okAction)
@@ -43,7 +48,11 @@ class ViewController: UIViewController {
             return
         }
         
-        UdacityAPIConvenience.getSessionId(completionHandler: {(success, result, errorString) in
+        // Before starting the API call, disable the button and let the user know what's going on
+        loginButton.isEnabled = false
+        loginButton.setTitle("Logging in", for: .disabled)
+        
+        UdacityAPIConvenience.getSessionId(username: emailText, password: passwordText, completionHandler: {(success, result, errorString) in
             // If unsuccessful login, tell the user
             if let errorString = errorString {
                 // Alert error string. Might be bad credentials, might be bad connection.
@@ -65,6 +74,7 @@ class ViewController: UIViewController {
                         if let error = error {
                             // Alert the error here!
                             self.displayAlert(title: "Error", message: error)
+
                         } else {
                             // Otherwise we have no error, we can compile the results and display the map/list tabbed view controller
                             let arrayOfStudentInfos = result!["results"] as! [[String:AnyObject]]
@@ -127,3 +137,5 @@ class ViewController: UIViewController {
     }
 }
 
+
+// Log in load pins when the map view shows.

@@ -11,11 +11,11 @@ import Foundation
 class UdacityAPIConvenience {
     // This is step 1.
     // The completion handler passed in should have: success: Bool, results: [String:AnyObject]
-    static func getSessionId(completionHandler: @escaping (_ success: Bool, _ results: [String:AnyObject]?, _ errorString: String?) -> Void) {
+    static func getSessionId(username: String, password: String, completionHandler: @escaping (_ success: Bool, _ results: [String:AnyObject]?, _ errorString: String?) -> Void) {
         
         let baseUrl = "https://www.udacity.com/api"
         let pathExtension = "/session"
-        let httpBody = "{\"udacity\": {\"username\": \"ash.duckett@outlook.com\", \"password\": \"Visualstudio2010.\"}}" // pass in username and pw
+        let httpBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}" // pass in username and pw
         
         UdacityAPIClient.performPOSTRequest(baseURL: baseUrl, pathExtension: pathExtension, httpBody: httpBody, completionHandler: {(success, errorString, result, response) in
             

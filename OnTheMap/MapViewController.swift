@@ -20,29 +20,58 @@ class MapViewController: LocationDisplayViewController, MKMapViewDelegate {
         // Store a reference for the superclass. Don't know how to have an inherited outlet,
         // plus, we don't need direct interaction with the map for all subclasses.
         map = mapView
+    }
+    
+    
+    // Unfortumately loading data from network each time to keep pins up to date.
+    // I should probably have created my own type of MKPointAnnotation or stashed annotations into the
+    // studentinformation array
+    override func viewWillAppear(_ animated: Bool) {
+        let annotations = mapView.annotations
+        mapView.removeAnnotations(annotations)
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.studentCollection.removeAll()
         
         // Now let's see if we can access the map values
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-
-        // Iterate over the studentCollection and extract information for pins
-        for item in appDelegate.studentCollection {
-       
-            let lat = CLLocationDegrees(item.lat)
-            let lng = CLLocationDegrees(item.lng)
-            let title = item.fullName
-            let subtitle = item.mediaURL
         
-            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)
-            let annotation = MKPointAnnotation()
+        
+        // Error check
+        ParseAPIConvenience.getStudentData(completionHandler: { (success, errorString, result) in
+
+            let arrayOfStudentInfos = result!["results"] as! [[String:AnyObject]]
             
-            annotation.coordinate = coordinate
-            annotation.title = title
-            annotation.subtitle = subtitle
-            self.mapView.addAnnotation(annotation)
-        }
-        
+            for studentInfoItem in arrayOfStudentInfos {
+                let student = StudentInformation(studentInfo: studentInfoItem)
+                appDelegate.studentCollection.append(student)
+            }
 
         
+        
+        
+            DispatchQueue.main.async {
+                for item in appDelegate.studentCollection {
+                   
+                    let lat = CLLocationDegrees(item.lat)
+                    let lng = CLLocationDegrees(item.lng)
+                    let title = item.fullName
+                    let subtitle = item.mediaURL
+                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                    let annotation = MKPointAnnotation()
+                    
+                    annotation.coordinate = coordinate
+                    annotation.title = title
+                    annotation.subtitle = subtitle
+                    self.mapView.addAnnotation(annotation)
+                }
+
+            }
+  
+            
+        
+        
+        })
+
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

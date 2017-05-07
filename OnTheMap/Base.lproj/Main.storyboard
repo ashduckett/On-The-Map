@@ -38,7 +38,7 @@
                                 <rect key="frame" x="16" y="390" width="343" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ag0-1x-YTR">
                                 <rect key="frame" x="16" y="428" width="343" height="30"/>
@@ -66,6 +66,7 @@
                     </view>
                     <connections>
                         <outlet property="emailField" destination="q9J-mI-vTY" id="5g4-wl-fcB"/>
+                        <outlet property="loginButton" destination="ag0-1x-YTR" id="ScC-aN-gT1"/>
                         <outlet property="passwordField" destination="0KA-c8-xO9" id="iKY-8o-SHL"/>
                     </connections>
                 </viewController>
@@ -204,6 +205,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="addLocationButton" destination="qbl-il-MiM" id="JqE-fa-Ova"/>
                         <outlet property="addressField" destination="wWH-MB-MoG" id="6zd-3O-RAZ"/>
                         <outlet property="urlField" destination="qpM-Rs-XXC" id="bcZ-Bd-ngQ"/>
                     </connections>
@@ -212,11 +214,11 @@
             </objects>
             <point key="canvasLocation" x="3109.5999999999999" y="91.304347826086968"/>
         </scene>
-        <!--Map-->
+        <!--Table-->
         <scene sceneID="BbV-tM-csf">
             <objects>
                 <navigationController id="tG0-Of-vY0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Map" id="5Km-Wb-yAm"/>
+                    <tabBarItem key="tabBarItem" title="Table" id="5Km-Wb-yAm"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ngn-7v-15u">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

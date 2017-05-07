@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 struct StudentInformation {
     var firstName: String = ""
@@ -16,6 +17,7 @@ struct StudentInformation {
     var lng: Double = 0.0
     var uniqueKey = ""
     var objectId = ""
+    var annotation: MKPointAnnotation?
     
     var fullName: String {
         return "\(firstName) \(lastName)"

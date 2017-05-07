@@ -15,18 +15,58 @@ class PostLocationViewController: UIViewController {
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var urlField: UITextField!
     
+    @IBOutlet weak var addLocationButton: UIButton!
     var mapView: MKMapView!
     var overwriting: Bool!
     
+    
+    func displayAlert(title: String, message: String) {
+        
+        DispatchQueue.main.async {
+            let alertController = UIAlertController()
+            alertController.title = title
+            alertController.message = message
+            
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {(action) in
+                self.addLocationButton.isEnabled = true
+                self.addLocationButton.setTitle("Add Location", for: .disabled)
+            }
+            
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        
+    }
+
+    
+    
     @IBAction func submitLocation(_ sender: Any) {
         let geocoder = CLGeocoder()
-        let address = addressField.text!
+        //let address = addressField.text!
+        
         let url = urlField.text!
-                
+        // First of all, make sure something is in each box
+        guard let address = addressField.text, address.isEmpty == false,
+            let email = urlField.text, email.isEmpty == false else {
+                displayAlert(title: "Error", message: "You need to enter both a location and a URL")
+                return
+        }
+        
+        
+        
+        
         geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error) in
+            
+            self.addLocationButton.isEnabled = false
+            self.addLocationButton.setTitle("Sending...", for: .disabled)
+            
             if error != nil {
                 // Alert box here to say it can't find the location
-                print("There's been an error. What do we need to handle here?")
+
+                self.displayAlert(title: "Error", message: "Cannot find that location")
+                
+                
+
             } else {
                 if let placemark = placemarks?.first {
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -35,19 +75,21 @@ class PostLocationViewController: UIViewController {
                     
                     let annotation = MKPointAnnotation()
                     
-                    let title = appDelegate.loginName
+                    let title = appDelegate.loggedInStudent.fullName
                     
                     annotation.title = title
                     
                     // Subtitle I think is the URL
                     annotation.subtitle = url
-                    
+                    print("Applying \(url)")
                     annotation.coordinate = coordinate
                     
                     // Add the new pin
+                    // Might be able to delete this
                     self.mapView.addAnnotation(annotation)
                     
                     if !self.overwriting {
+                    
                         ParseAPIConvenience.postNewStudentLocation(uniqueKey: appDelegate.uniqueKey, firstName: appDelegate.firstName, lastName: appDelegate.lastName, mapString: self.addressField.text!, mediaURL: self.urlField.text!, latitude: coordinate.latitude, longitude: coordinate.longitude, completionHandler: {(success, error, response) in
                         
                          
@@ -70,9 +112,9 @@ class PostLocationViewController: UIViewController {
                         // has a user id in that data, you know you've posted before
                     
                     } else {
-                        
-                        let mapString = self.addressField.text!
-                        let mediaURL = self.urlField.text!
+                        print("We are overwriting")
+                        let mapString = address
+                        let mediaURL = url
                         let latitude = coordinate.latitude
                         let longitude = coordinate.longitude
                         
