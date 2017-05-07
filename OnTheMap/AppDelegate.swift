@@ -18,17 +18,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // This should be part of the logged in student instead
     var loginName: String!
     
-    var loggedInStudent: StudentInformation!
-    var uniqueKey: String!
     
+    var loggedInStudent: StudentInformation!
+    
+    // Can this stuff be stored in a student?
+    var uniqueKey: String!
     var firstName: String!
     var lastName: String!
-    
+    var objectId: String!
     
     // Set this at login
     var userHasPosted: Bool!
     
-    var objectId: String!
+    
     
     // This item should be in its own model class, but put here for now for testing
     var studentCollection = [StudentInformation]()

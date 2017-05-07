@@ -61,7 +61,7 @@ class ViewController: UIViewController {
                 
                 // Now we have a user id, we can do yet another post request
                 if let _ = session["id"] {
-                    APIClient.getStudentData(url: "", completionHandler: {(success, error, result) in
+                    APIClient.getStudentData(completionHandler: {(success, error, result) in
                         if let error = error {
                             // Alert the error here!
                             self.displayAlert(title: "Error", message: error)
@@ -77,6 +77,8 @@ class ViewController: UIViewController {
                                 appDelegate.studentCollection.append(student)
                             }
                             
+                            
+                            // This should be called getLoggedInUserData
                             APIClient.performGETRequest(baseUrl: "https://www.udacity.com/api/", pathExtension: "users/\(userId)",
                                 completionHandler: {(success, errorString, results, response) in
                                     
@@ -90,6 +92,13 @@ class ViewController: UIViewController {
                                     
                                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                                     appDelegate.loginName = "\(firstName) \(lastName)"
+                                    
+                                    
+                                    appDelegate.loggedInStudent = StudentInformation(studentInfo: [String:AnyObject]())
+                                    appDelegate.loggedInStudent.uniqueKey = uniqueKey
+                                    appDelegate.loggedInStudent.firstName = firstName
+                                    appDelegate.loggedInStudent.lastName = lastName
+                                    
                                     
                                     // This should work.
                                     appDelegate.uniqueKey = uniqueKey // same as user id

@@ -45,8 +45,6 @@ class LocationDisplayViewController: UIViewController {
     }
     
     func pin() {
-        print("Pin button clicked")
-        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         // If the user has already posted display alert with cancel or overrwrite buttons
 

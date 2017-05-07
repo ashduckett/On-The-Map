@@ -11,7 +11,9 @@ import UIKit
 
 class APIClient {
     static let baseURL = "https://www.udacity.com/api/"
+
     
+    // Udacity specific function for logging out
     static func deleteUdacitySession(baseURL: String, pathExtension: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?) -> Void) {
         let pathExtension = "session"
         let method = "DELETE"
@@ -85,7 +87,7 @@ class APIClient {
                 completionHandler(false, "There was an error getting data from the server", nil, response)
                 return
             }
-            print("data has stuff")
+
             // Snip off some data as instructed by Udacity
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
@@ -104,8 +106,8 @@ class APIClient {
         task.resume()
     }
     
+    // Udacity specific post request code
     static func performGETRequest(baseUrl: String, pathExtension: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ results: [String:AnyObject]?, _ response: URLResponse?) -> Void) {
-
 
         // At this point we should grab user data
         let request = NSMutableURLRequest(url: URL(string: baseUrl + pathExtension)!)
@@ -146,10 +148,6 @@ class APIClient {
                 return
                 
             }
-            
-            print(parsedUserData)
-            
-            
             completionHandler(true, nil, parsedUserData, response)
         }
         task.resume()
@@ -187,18 +185,12 @@ class APIClient {
             completionHandler(true, result, nil)
         })
     }
+ 
+    static func performParseGETRequest(baseUrl: String, pathExtension: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ results: [String:AnyObject]?, _ response: URLResponse?) -> Void) {
 
-    
-    
-    
-    // A completion handler should be added so that you can then update the UI knowing that this has
-    // finished.
-    static func getStudentData(url: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?) -> Void) {
         
-        print("getStudentData called")
-        // Ensure we're getting 100 and that they are sorted by latest updates as per spec
+        
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt")!)
-        
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         
@@ -207,56 +199,103 @@ class APIClient {
         let task = session.dataTask(with: request as URLRequest){(data, response, error) in
             guard error == nil else {
                 print("There was an error")
-                completionHandler(false, "Error getting student data.", nil)
+                completionHandler(false, "ParseAPIClient: Error getting data.", nil, response)
                 return
             }
             
             // Check for a bad HTTP response
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-                completionHandler(false, "Your request returned a status code other than 2xx!", nil)
-                print("bad status code")
-                
+                completionHandler(false, "ParseAPIClient: Your request returned a status code other than 2xx!", nil, response)
+                return
+            }
+            
+            guard let data = data else {
+                completionHandler(false, "No data returned", nil, response)
                 return
             }
             
             var parsedResult = [String:AnyObject]()
             
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
             } catch {
-                completionHandler(false, "Could not read data from server.", nil)
+                completionHandler(false, "ParseAPIClient: Could not read data from server.", nil, response)
             }
-        
-            completionHandler(true, nil, parsedResult)
-        
+            
+            completionHandler(true, nil, parsedResult, response)
+            
         }
         task.resume()
     }
     
-    static func postNewStudentLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, mediaURL: String, latitude: Double, longitude: Double, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?) -> Void) {
-        let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
+    static func performParsePOSTRequest(baseURL: String, pathExtension: String, httpBody: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?, _ response: URLResponse?) -> Void) {
+                    
+            let request = NSMutableURLRequest(url: URL(string: baseURL)!)
+            request.httpMethod = "POST"
+            
+            request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+            request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = httpBody.data(using: String.Encoding.utf8)
+            let session = URLSession.shared
+            
+            let task = session.dataTask(with: request as URLRequest){(data, response, error) in
+                
+                guard error == nil else {
+                    print("Error not nil!")
+                    completionHandler(false, "Error getting student data.", nil, response)
+                    return
+                }
+                
+                // Check for a bad HTTP response
+                guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                    completionHandler(false, "Your request returned a status code other than 2xx!", nil, response)
+                    print("Bad status code!")
+                    return
+                }
+                
+                var parsedResult = [String:AnyObject]()
+                
+                do {
+                    parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
+                } catch {
+                    completionHandler(false, "Could not read data from server.", nil, response)
+                }
+                
+                // Success!
+                completionHandler(true, nil, parsedResult, response)
+            }
+            
+            task.resume()
+        }
+    
+    
+    // PARSE PUT
+    static func performParsePUTRequest(baseURL: String, httpBody: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?, _ response: URLResponse?) -> Void) {
         
-        request.httpMethod = "POST"
+        let request = NSMutableURLRequest(url: URL(string: baseURL)!)
+        request.httpMethod = "PUT"
         
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-        
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\", \"latitude\": \(latitude), \"longitude\": \(longitude)}".data(using: String.Encoding.utf8)
+        
+        request.httpBody = httpBody.data(using: String.Encoding.utf8)
+        
         let session = URLSession.shared
         
-        let task = session.dataTask(with: request as URLRequest){(data, response, error) in
-
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
             guard error == nil else {
                 print("Error not nil!")
-                completionHandler(false, "Error getting student data.", nil)
+                completionHandler(false, "Error getting student data.", nil, response)
                 return
             }
             
             // Check for a bad HTTP response
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-                completionHandler(false, "Your request returned a status code other than 2xx!", nil)
-                print("Bad status code!")
+                completionHandler(false, "Your request returned a status code other than 2xx!", nil, response)
                 return
             }
             
@@ -265,17 +304,73 @@ class APIClient {
             do {
                 parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
             } catch {
-                completionHandler(false, "Could not read data from server.", nil)
+                completionHandler(false, "Could not read data from server.", nil, response)
             }
             
             // Success!
-            completionHandler(true, nil, parsedResult)
+            completionHandler(true, nil, parsedResult, response)
         }
         
         task.resume()
-        
     }
     
     
     
+    static func updateStudentPost(mapString: String, mediaURL: String, latitude: Double, longitude: Double, completionHandler: @escaping (_ success: Bool, _ errorString: String?) -> Void ) {
+        print("Update student post method called")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(appDelegate.objectId!)"
+        let uniqueKey = appDelegate.loggedInStudent.uniqueKey
+        let firstName = appDelegate.loggedInStudent.firstName
+        let lastName = appDelegate.loggedInStudent.lastName
+
+        let httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\", \"latitude\": \(latitude), \"longitude\": \(longitude)}"
+    
+        performParsePUTRequest(baseURL: urlString, httpBody: httpBody, completionHandler: {(success, errorString, results, response) in
+            if !success {
+                completionHandler(false, "Could not update student.")
+            } else {
+                completionHandler(true, nil)
+            }
+        })
+        
+    }
+    
+    
+    // Parse specific code
+    static func getStudentData(completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?) -> Void) {
+        
+        // These should be constants
+        let baseUrl = "https://parse.udacity.com/parse/classes/StudentLocation"
+        let pathExtension = "?limit=100&order=-updatedAt"
+        
+        
+        // In this case we don't need to worry about passing in the URL stuff. We know we want student data. Better to pass it in from getStudentData.
+        performParseGETRequest(baseUrl: baseUrl, pathExtension: pathExtension, completionHandler: {(success, errorString, result, response) in
+          
+            
+            if !success {
+                completionHandler(success, "Could not load student data.", nil)
+            } else {
+                completionHandler(success, nil, result)
+            }
+        })
+    }
+    
+    // Parse specific code
+    static func postNewStudentLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, mediaURL: String, latitude: Double, longitude: Double, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?) -> Void) {
+        
+        performParsePOSTRequest(baseURL: "https://parse.udacity.com/parse/classes/StudentLocation", pathExtension: "", httpBody: "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\", \"latitude\": \(latitude), \"longitude\": \(longitude)}", completionHandler: {(success, errorString, result, response) in
+            
+            if !success {
+                completionHandler(false, errorString, result)
+            } else {
+                completionHandler(true, errorString, result)
+            }
+        
+        
+        
+        })
+    }
 }
