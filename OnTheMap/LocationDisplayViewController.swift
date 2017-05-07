@@ -23,13 +23,12 @@ class LocationDisplayViewController: UIViewController {
     func disableUI(enabled: Bool) {
         self.navigationItem.leftBarButtonItem?.isEnabled = enabled
         self.navigationItem.rightBarButtonItem?.isEnabled = enabled
-        
     }
 
     func logout() {
         disableUI(enabled: false)
         self.navigationItem.leftBarButtonItem?.title = "Logging Out"
-        APIClient.deleteUdacitySession(baseURL: "https://www.udacity.com/api/", pathExtension: "session", completionHandler: {(success, error) in
+        UdacityAPIClient.deleteUdacitySession(baseURL: "https://www.udacity.com/api/", pathExtension: "session", completionHandler: {(success, error) in
             if success == true {
                 // Maybe do something with the UI as things are logging out, AND THEN!
                 
@@ -89,11 +88,6 @@ class LocationDisplayViewController: UIViewController {
             controller.mapView = map
             controller.overwriting = false
             self.present(controller, animated: true, completion: nil)
-        
-        // How the hell can we get the map...oooooh, we could just use the story board?
-        // But we already have an instance!
-        
-        // How about adding the data to the model, and then reloading the model? No.
         
         }
     }

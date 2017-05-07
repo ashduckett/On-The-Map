@@ -43,7 +43,7 @@ class ViewController: UIViewController {
             return
         }
         
-        APIClient.getSessionId(completionHandler: {(success, result, errorString) in
+        UdacityAPIConvenience.getSessionId(completionHandler: {(success, result, errorString) in
             // If unsuccessful login, tell the user
             if let errorString = errorString {
                 // Alert error string. Might be bad credentials, might be bad connection.
@@ -61,7 +61,7 @@ class ViewController: UIViewController {
                 
                 // Now we have a user id, we can do yet another post request
                 if let _ = session["id"] {
-                    APIClient.getStudentData(completionHandler: {(success, error, result) in
+                    ParseAPIConvenience.getStudentData(completionHandler: {(success, error, result) in
                         if let error = error {
                             // Alert the error here!
                             self.displayAlert(title: "Error", message: error)
@@ -79,7 +79,7 @@ class ViewController: UIViewController {
                             
                             
                             // This should be called getLoggedInUserData
-                            APIClient.performGETRequest(baseUrl: "https://www.udacity.com/api/", pathExtension: "users/\(userId)",
+                            UdacityAPIClient.performGETRequest(baseUrl: "https://www.udacity.com/api/", pathExtension: "users/\(userId)",
                                 completionHandler: {(success, errorString, results, response) in
                                     
                                     guard let user = results!["user"],
@@ -91,27 +91,21 @@ class ViewController: UIViewController {
                                     }
                                     
                                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                                    appDelegate.loginName = "\(firstName) \(lastName)"
-                                    
                                     
                                     appDelegate.loggedInStudent = StudentInformation(studentInfo: [String:AnyObject]())
                                     appDelegate.loggedInStudent.uniqueKey = uniqueKey
                                     appDelegate.loggedInStudent.firstName = firstName
                                     appDelegate.loggedInStudent.lastName = lastName
-                                    
-                                    
-                                    // This should work.
-                                    appDelegate.uniqueKey = uniqueKey // same as user id
-                                    appDelegate.firstName = firstName
-                                    appDelegate.lastName = lastName
+
                                     
                                     for student in appDelegate.studentCollection {
-                                        if appDelegate.uniqueKey == student.uniqueKey {
+                                        if appDelegate.loggedInStudent.uniqueKey == student.uniqueKey {
                                             
                                             appDelegate.userHasPosted = true
                                             
-                                            // Grab the matching object id (the first)
+                                            // Grab the matching object id
                                             appDelegate.objectId = student.objectId
+                                            
                                             break
                                         }
                                     }

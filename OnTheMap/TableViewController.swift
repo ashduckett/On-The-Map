@@ -11,20 +11,15 @@ import UIKit
 
 class TableViewController: LocationDisplayViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
-    
-    
-    // What should happen when you press a cell?
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StudentCell")!
-        // Tidy this up
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
         cell.textLabel?.text = appDelegate.studentCollection[indexPath.row].fullName
         return cell
     }
@@ -34,5 +29,17 @@ class TableViewController: LocationDisplayViewController, UITableViewDelegate, U
         return appDelegate.studentCollection.count
         
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let toOpen = appDelegate.studentCollection[indexPath.row].mediaURL
+        let app = UIApplication.shared
+        
+        if let url = URL(string: toOpen) {
+            app.open(url, options: [:], completionHandler: nil)
+        }
+    
     }
 }

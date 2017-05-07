@@ -29,7 +29,7 @@ class MapViewController: LocationDisplayViewController, MKMapViewDelegate {
        
             let lat = CLLocationDegrees(item.lat)
             let lng = CLLocationDegrees(item.lng)
-            let title = "\(item.firstName) \(item.lastName)"
+            let title = item.fullName
             let subtitle = item.mediaURL
         
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)

@@ -48,7 +48,7 @@ class PostLocationViewController: UIViewController {
                     self.mapView.addAnnotation(annotation)
                     
                     if !self.overwriting {
-                        APIClient.postNewStudentLocation(uniqueKey: appDelegate.uniqueKey, firstName: appDelegate.firstName, lastName: appDelegate.lastName, mapString: self.addressField.text!, mediaURL: self.urlField.text!, latitude: coordinate.latitude, longitude: coordinate.longitude, completionHandler: {(success, error, response) in
+                        ParseAPIConvenience.postNewStudentLocation(uniqueKey: appDelegate.uniqueKey, firstName: appDelegate.firstName, lastName: appDelegate.lastName, mapString: self.addressField.text!, mediaURL: self.urlField.text!, latitude: coordinate.latitude, longitude: coordinate.longitude, completionHandler: {(success, error, response) in
                         
                          
                             // Assuming all went well, we should close the window and zoom into the location added
@@ -76,7 +76,7 @@ class PostLocationViewController: UIViewController {
                         let latitude = coordinate.latitude
                         let longitude = coordinate.longitude
                         
-                        APIClient.updateStudentPost(mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude, completionHandler: {(success, errorString) in
+                        ParseAPIConvenience.updateStudentPost(mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude, completionHandler: {(success, errorString) in
                             if !success {
                                 print(errorString!)
                             } else {
