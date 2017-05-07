@@ -38,16 +38,14 @@ class MapViewController: LocationDisplayViewController, MKMapViewDelegate {
         
         // Error check
         ParseAPIConvenience.getStudentData(completionHandler: { (success, errorString, result) in
-
+            
+            
             let arrayOfStudentInfos = result!["results"] as! [[String:AnyObject]]
             
             for studentInfoItem in arrayOfStudentInfos {
                 let student = StudentInformation(studentInfo: studentInfoItem)
                 appDelegate.studentCollection.append(student)
             }
-
-        
-        
         
             DispatchQueue.main.async {
                 for item in appDelegate.studentCollection {

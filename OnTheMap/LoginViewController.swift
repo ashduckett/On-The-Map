@@ -79,6 +79,7 @@ class ViewController: UIViewController {
                             // Otherwise we have no error, we can compile the results and display the map/list tabbed view controller
                             let arrayOfStudentInfos = result!["results"] as! [[String:AnyObject]]
                     
+                            
                             for studentInfoItem in arrayOfStudentInfos {
                                 let student = StudentInformation(studentInfo: studentInfoItem)
                         
