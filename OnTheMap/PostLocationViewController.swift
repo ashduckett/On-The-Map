@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 
-class PostLocationViewController: UIViewController {
+class PostLocationViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var urlField: UITextField!
@@ -19,15 +19,26 @@ class PostLocationViewController: UIViewController {
     var students: StudentInformationModel!
 
     @IBOutlet weak var addLocationButton: UIButton!
-    //var mapView: MKMapView!
+
     var overwriting: Bool!
     var currentAnnotation: MKPointAnnotation!
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    override func viewWillAppear(_ animated: Bool) {
-        addLocationButton.isEnabled = true
-        print("Post new location view sees \(self.students.studentCollection.count) items.")
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        urlField.delegate = self
+        addressField.delegate = self
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        addressField.resignFirstResponder()
+        urlField.resignFirstResponder()
     }
     
     func displayAlert(title: String, message: String) {
@@ -115,6 +126,7 @@ class PostLocationViewController: UIViewController {
         let url = urlField.text!
         
         // This can explode
+        
         let coordinate = self.currentAnnotation.coordinate
         //let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 
