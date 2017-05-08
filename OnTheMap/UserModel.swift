@@ -14,7 +14,9 @@ class UserModel {
     var lastName: String!
     var uniqueKey: String!
     var latestObjectId: String!
-    var userHasPosted: Bool!
+    
+    // Default value with possibility of changing later
+    var userHasPosted: Bool! = false
     
     var fullName: String {
         return "\(firstName) \(lastName)"
