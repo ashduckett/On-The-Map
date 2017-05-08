@@ -24,6 +24,9 @@ class LocationDisplayViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(logout))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Pin", style: .plain, target: self, action: #selector(pin))
+        
+        let pinImage = UIImage(named: "icon_pin.png")
+        self.navigationItem.rightBarButtonItem?.image = pinImage
     }
     
     func disableUI(enabled: Bool) {

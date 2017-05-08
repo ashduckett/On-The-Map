@@ -96,7 +96,7 @@
         <scene sceneID="wc4-dt-CIx">
             <objects>
                 <navigationController storyboardIdentifier="MapView" id="wej-bI-IW5" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Map" id="c40-0J-5oV"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="icon_mapview-deselected" selectedImage="icon_mapview-selected" id="c40-0J-5oV"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="e11-QO-S1X">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -249,7 +249,7 @@
         <scene sceneID="BbV-tM-csf">
             <objects>
                 <navigationController id="tG0-Of-vY0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Table" id="5Km-Wb-yAm"/>
+                    <tabBarItem key="tabBarItem" title="Table" image="icon_listview-deselected" selectedImage="icon_listview-selected" id="5Km-Wb-yAm"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ngn-7v-15u">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -311,4 +311,10 @@
             <point key="canvasLocation" x="2420" y="525.78710644677665"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icon_listview-deselected" width="75" height="50"/>
+        <image name="icon_listview-selected" width="75" height="50"/>
+        <image name="icon_mapview-deselected" width="75" height="50"/>
+        <image name="icon_mapview-selected" width="75" height="50"/>
+    </resources>
 </document>
