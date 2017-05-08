@@ -14,8 +14,14 @@ class LocationDisplayViewController: UIViewController {
     // How are we going to set this?
     var map: MKMapView!
     
+    // Now the two views will inherit a place in which to hold the model
+    var students: StudentInformationModel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.students = (self.navigationController?.tabBarController as? MapListTabBarController)?.students
+        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(logout))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Pin", style: .plain, target: self, action: #selector(pin))
     }
@@ -32,30 +38,19 @@ class LocationDisplayViewController: UIViewController {
             
             DispatchQueue.main.async {
 
-                if success == true {
-                    // Maybe do something with the UI as things are logging out, AND THEN!
-                    
-                    print("logging out and removing annotations")
-
-                    
-                    let controller: UIViewController
-                    controller = (self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController"))!
-                    self.present(controller, animated: true, completion: nil)
+                if success {
+                    self.dismiss(animated: true, completion: nil)
                 } else {
                     self.disableUI(enabled: true)
                     self.navigationItem.leftBarButtonItem?.title = "Log Out"
                 }
             }
-        
         })
     }
     
     func pin() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        // If the user has already posted display alert with cancel or overrwrite buttons
-
         // If the user has already posted, show the popup asking if they're happy to overwrite
-        if appDelegate.userHasPosted {
+        if UserModel.user.userHasPosted {
 
             let alertController = UIAlertController()
             alertController.title = "Confirm"
@@ -66,16 +61,18 @@ class LocationDisplayViewController: UIViewController {
                 // Construct controller, and tell it we're overwriting
               let controller: PostLocationViewController
                 controller = (self.storyboard?.instantiateViewController(withIdentifier: "PostLocationViewController")) as! PostLocationViewController
+
+                // We need to set the model here
                 
                 // Keep a reference so we can talk to the map!
                 controller.overwriting = true
+                controller.students = self.students
                 controller.mapView = self.map
                 
                 self.present(controller, animated: true, completion: nil)
                 
                 alertController.dismiss(animated: true, completion: nil)
             }
-            
             
             let cancelAction = UIAlertAction(title: "Cancel", style: .default) {(action) in
                 // Leaving this blank will close the alert
@@ -91,6 +88,7 @@ class LocationDisplayViewController: UIViewController {
             let controller: PostLocationViewController
             controller = (self.storyboard?.instantiateViewController(withIdentifier: "PostLocationViewController")) as! PostLocationViewController
         
+            controller.students = self.students
             // Keep a reference so we can talk to the map!
             controller.mapView = map
             controller.overwriting = false

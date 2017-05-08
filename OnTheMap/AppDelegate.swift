@@ -14,26 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     let session = URLSession.shared
-
-    // This should be part of the logged in student instead
-    var loginName: String!
-    
-    
-    var loggedInStudent: StudentInformation!
-    
-    // Can this stuff be stored in a student?
-    var uniqueKey: String!
-    var firstName: String!
-    var lastName: String!
-    var objectId: String!
-    
-    // Set this at login
-    var userHasPosted: Bool!
-    
-    
-    
-    // This item should be in its own model class, but put here for now for testing
-    var studentCollection = [StudentInformation]()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

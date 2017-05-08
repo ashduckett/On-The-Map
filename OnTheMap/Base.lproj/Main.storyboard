@@ -74,10 +74,10 @@
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Map List Tab Bar Controller-->
         <scene sceneID="yjH-R7-TVA">
             <objects>
-                <tabBarController storyboardIdentifier="ListMapSelectionView" id="cgQ-Qw-zzR" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="ListMapSelectionView" id="cgQ-Qw-zzR" customClass="MapListTabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Xmp-5Z-Csl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -178,35 +178,66 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qbl-il-MiM">
-                                <rect key="frame" x="142.5" y="178" width="90" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qbl-il-MiM">
+                                <rect key="frame" x="142.5" y="617" width="90" height="30"/>
                                 <state key="normal" title="Add Location"/>
                                 <connections>
                                     <action selector="submitLocation:" destination="Mnl-dT-KGu" eventType="touchUpInside" id="xOW-ul-064"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6s4-as-VrL">
+                                <rect key="frame" x="304" y="162" width="48" height="30"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelButtonClicked:" destination="Mnl-dT-KGu" eventType="touchUpInside" id="chC-yJ-Xy0"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3N9-Zf-vfa">
+                                <rect key="frame" x="16" y="167" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="EPV-xN-R6R">
+                                <rect key="frame" x="0.0" y="200" width="375" height="403"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cva-wo-94Q">
+                                <rect key="frame" x="241" y="162" width="55" height="30"/>
+                                <state key="normal" title="Find Me"/>
+                                <connections>
+                                    <action selector="findMeButtonClicked:" destination="Mnl-dT-KGu" eventType="touchUpInside" id="7LP-Wg-a1f"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="qbl-il-MiM" firstAttribute="top" secondItem="EPV-xN-R6R" secondAttribute="bottom" constant="14" id="4hy-4O-fv4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="EPV-xN-R6R" secondAttribute="trailing" constant="-16" id="4ob-7M-FaA"/>
                             <constraint firstItem="ljU-uc-Cj6" firstAttribute="top" secondItem="PGr-m9-UdJ" secondAttribute="bottom" constant="8" id="5NH-jx-LQK"/>
                             <constraint firstItem="wWH-MB-MoG" firstAttribute="top" secondItem="ljU-uc-Cj6" secondAttribute="bottom" constant="8" id="5lO-AE-MaN"/>
+                            <constraint firstItem="6s4-as-VrL" firstAttribute="leading" secondItem="cva-wo-94Q" secondAttribute="trailing" constant="8" id="C7L-V1-MII"/>
+                            <constraint firstItem="EPV-xN-R6R" firstAttribute="top" secondItem="6s4-as-VrL" secondAttribute="bottom" constant="8" symbolic="YES" id="D8L-5i-fde"/>
+                            <constraint firstItem="qbl-il-MiM" firstAttribute="centerX" secondItem="Wl2-eQ-PDM" secondAttribute="centerX" id="G5K-vD-UEB"/>
                             <constraint firstAttribute="leadingMargin" secondItem="LcB-0B-Cmg" secondAttribute="leading" id="HO0-4V-aiY"/>
                             <constraint firstItem="wWH-MB-MoG" firstAttribute="leading" secondItem="Wl2-eQ-PDM" secondAttribute="leadingMargin" id="LIO-8F-RSh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="6s4-as-VrL" secondAttribute="trailing" constant="7" id="Mgp-6E-cr4"/>
+                            <constraint firstItem="6s4-as-VrL" firstAttribute="top" secondItem="qpM-Rs-XXC" secondAttribute="bottom" constant="8" id="Nvq-Vh-PE5"/>
+                            <constraint firstItem="EPV-xN-R6R" firstAttribute="leading" secondItem="Wl2-eQ-PDM" secondAttribute="leadingMargin" constant="-16" id="THv-Ny-3OU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="qpM-Rs-XXC" secondAttribute="trailing" id="UD2-Cw-BLY"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wWH-MB-MoG" secondAttribute="trailing" id="Ura-vp-9ux"/>
-                            <constraint firstItem="qbl-il-MiM" firstAttribute="centerX" secondItem="Wl2-eQ-PDM" secondAttribute="centerX" id="fdW-5R-Foh"/>
+                            <constraint firstItem="cva-wo-94Q" firstAttribute="top" secondItem="qpM-Rs-XXC" secondAttribute="bottom" constant="8" id="cNI-Nu-YEC"/>
+                            <constraint firstItem="tEa-J3-NiL" firstAttribute="top" secondItem="EPV-xN-R6R" secondAttribute="bottom" constant="64" id="iwt-fp-JSw"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ljU-uc-Cj6" secondAttribute="trailing" id="kpN-bR-q8G"/>
                             <constraint firstItem="LcB-0B-Cmg" firstAttribute="top" secondItem="wWH-MB-MoG" secondAttribute="bottom" constant="8" id="mSZ-ri-z9J"/>
                             <constraint firstAttribute="leadingMargin" secondItem="ljU-uc-Cj6" secondAttribute="leading" id="u2y-WA-vgW"/>
                             <constraint firstAttribute="leadingMargin" secondItem="qpM-Rs-XXC" secondAttribute="leading" id="umg-58-bVe"/>
                             <constraint firstItem="qpM-Rs-XXC" firstAttribute="top" secondItem="LcB-0B-Cmg" secondAttribute="bottom" constant="8" id="vOe-IK-PwD"/>
-                            <constraint firstItem="qbl-il-MiM" firstAttribute="top" secondItem="qpM-Rs-XXC" secondAttribute="bottom" constant="24" id="yV3-fe-eVr"/>
                             <constraint firstAttribute="trailingMargin" secondItem="LcB-0B-Cmg" secondAttribute="trailing" constant="7" id="zfb-2l-Usj"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="3N9-Zf-vfa" id="pyF-KJ-pXc"/>
                         <outlet property="addLocationButton" destination="qbl-il-MiM" id="JqE-fa-Ova"/>
                         <outlet property="addressField" destination="wWH-MB-MoG" id="6zd-3O-RAZ"/>
+                        <outlet property="mapView" destination="EPV-xN-R6R" id="0O2-si-56H"/>
                         <outlet property="urlField" destination="qpM-Rs-XXC" id="bcZ-Bd-ngQ"/>
                     </connections>
                 </viewController>

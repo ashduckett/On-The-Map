@@ -18,23 +18,16 @@ class TableViewController: LocationDisplayViewController, UITableViewDelegate, U
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StudentCell")!
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        cell.textLabel?.text = appDelegate.studentCollection[indexPath.row].fullName
+        cell.textLabel?.text = students.studentCollection[indexPath.row].fullName
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        return appDelegate.studentCollection.count
-        
-        
+        return students.studentCollection.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        let toOpen = appDelegate.studentCollection[indexPath.row].mediaURL
+        let toOpen = students.studentCollection[indexPath.row].mediaURL
         let app = UIApplication.shared
         
         if let url = URL(string: toOpen) {

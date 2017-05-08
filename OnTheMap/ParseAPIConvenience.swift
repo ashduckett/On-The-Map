@@ -13,16 +13,14 @@ class ParseAPIConvenience {
     
     static func updateStudentPost(mapString: String, mediaURL: String, latitude: Double, longitude: Double, completionHandler: @escaping (_ success: Bool, _ errorString: String?) -> Void ) {
        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(UserModel.user.latestObjectId!)"
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation/\(appDelegate.objectId!)"
-        let uniqueKey = appDelegate.loggedInStudent.uniqueKey
-        let firstName = appDelegate.loggedInStudent.firstName
-        let lastName = appDelegate.loggedInStudent.lastName
-        
+        let uniqueKey = UserModel.user.uniqueKey!
+        let firstName = UserModel.user.firstName!
+        let lastName = UserModel.user.lastName!
+       
         let httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\", \"latitude\": \(latitude), \"longitude\": \(longitude)}"
         
-        print(httpBody)
         ParseAPIClient.performParsePUTRequest(baseURL: urlString, httpBody: httpBody, completionHandler: {(success, errorString, results, response) in
             if !success {
                 completionHandler(false, "Could not update student.")
@@ -32,7 +30,6 @@ class ParseAPIConvenience {
         })
         
     }
-    
     
     // Parse specific code
     static func getStudentData(completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?) -> Void) {
@@ -64,9 +61,6 @@ class ParseAPIConvenience {
             } else {
                 completionHandler(true, errorString, result)
             }
-            
-            
-            
         })
     }
 }

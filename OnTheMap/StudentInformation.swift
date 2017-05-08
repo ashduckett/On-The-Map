@@ -22,6 +22,8 @@ struct StudentInformation {
     var fullName: String {
         return "\(firstName) \(lastName)"
     }
+    
+    init() { }
 
     init(studentInfo: [String:AnyObject]) {
         if let firstName = studentInfo["firstName"] as? String {

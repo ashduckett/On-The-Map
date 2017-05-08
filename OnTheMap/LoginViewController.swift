@@ -8,16 +8,70 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
-
+    
+    var students: StudentInformationModel!
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        subscribeToKeyboardNotifications()
+        emailField.text = ""
+        passwordField.text = ""
+        loginButton.setTitle("Log In", for: .normal)
+        loginButton.isEnabled = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeToKeyboardNotifications()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        emailField.delegate = self
+        passwordField.delegate = self
     }
-
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.cgRectValue.height
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        self.view.frame.origin.y =  -getKeyboardHeight(notification: notification)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        self.view.frame.origin.y = 0
+    }
+    
+    func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    func unsubscribeToKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
     func displayAlert(title: String, message: String) {
         
         DispatchQueue.main.async {
@@ -66,7 +120,6 @@ class ViewController: UIViewController {
                     print("bad result")
                     return
                 }
-  
                 
                 // Now we have a user id, we can do yet another post request
                 if let _ = session["id"] {
@@ -74,62 +127,55 @@ class ViewController: UIViewController {
                         if let error = error {
                             // Alert the error here!
                             self.displayAlert(title: "Error", message: error)
-
                         } else {
                             // Otherwise we have no error, we can compile the results and display the map/list tabbed view controller
-                            let arrayOfStudentInfos = result!["results"] as! [[String:AnyObject]]
-                    
                             
-                            for studentInfoItem in arrayOfStudentInfos {
-                                let student = StudentInformation(studentInfo: studentInfoItem)
-                        
-                                // You might not need this here as well as above
-                                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                                appDelegate.studentCollection.append(student)
-                            }
-                            
+                            self.students = StudentInformationModel(students: result!["results"] as! [[String:AnyObject]])
                             
                             // This should be called getLoggedInUserData
                             UdacityAPIClient.performGETRequest(baseUrl: "https://www.udacity.com/api/", pathExtension: "users/\(userId)",
                                 completionHandler: {(success, errorString, results, response) in
                                     
-                                    guard let user = results!["user"],
-                                        let firstName = user["first_name"] as? String,
-                                        let lastName = user["last_name"] as? String,
-                                        let uniqueKey = user["key"] as? String else {
-                                            print("Missing data from response")
-                                            return
+                                guard let user = results!["user"],
+                                    let firstName = user["first_name"] as? String,
+                                    let lastName = user["last_name"] as? String,
+                                    let uniqueKey = user["key"] as? String else {
+                                        return
+                                }
+                                
+                                UserModel.user = UserModel()
+                                UserModel.user.firstName = firstName
+                                UserModel.user.lastName = lastName
+                                UserModel.user.uniqueKey = uniqueKey
+                                
+                                for student in (self.students?.studentCollection)! {
+                                    if UserModel.user.uniqueKey == student.uniqueKey {
+                                        
+                                        // If the user's unique key is already there, we know we've posted before
+                                        UserModel.user.userHasPosted = true
+                                        
+                                        // Grab the matching object id. Since items are already sorted, this should be the latest of mine.
+                                        UserModel.user.latestObjectId = student.objectId
+                                        break
                                     }
-                                    
-                                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                                    
-                                    appDelegate.loggedInStudent = StudentInformation(studentInfo: [String:AnyObject]())
-                                    appDelegate.loggedInStudent.uniqueKey = uniqueKey
-                                    appDelegate.loggedInStudent.firstName = firstName
-                                    appDelegate.loggedInStudent.lastName = lastName
+                                }
 
-                                    
-                                    for student in appDelegate.studentCollection {
-                                        if appDelegate.loggedInStudent.uniqueKey == student.uniqueKey {
-                                            
-                                            appDelegate.userHasPosted = true
-                                            
-                                            // Grab the matching object id
-                                            appDelegate.objectId = student.objectId
-                                            
-                                            break
-                                        }
-                                    }
-                                    
-                                    DispatchQueue.main.async {
-                                        let controller: UITabBarController
-                                        controller = self.storyboard?.instantiateViewController(withIdentifier: "ListMapSelectionView") as! UITabBarController
-                                        self.present(controller, animated: true, completion: nil)
-                                    }
+                                // Filter out everything that's not mine, or if it is mine, make sure it's the latest.
+                                let filtered = self.students.studentCollection.filter({(item) in
+                                    return item.uniqueKey != UserModel.user.uniqueKey || (item.objectId == UserModel.user.latestObjectId)
                                 })
-    
-                            // Update the UI by displaying the tabbed controller
-                            
+                                
+                                self.students.studentCollection = filtered
+                                
+                                // Here we are displaying the tab bar controller
+                                DispatchQueue.main.async {
+                                    let controller: MapListTabBarController
+                                    
+                                    controller = self.storyboard?.instantiateViewController(withIdentifier: "ListMapSelectionView") as! MapListTabBarController
+                                    controller.students = self.students
+                                    self.present(controller, animated: true, completion: nil)
+                                }
+                            })
                         }
                     })
                 }
@@ -137,6 +183,3 @@ class ViewController: UIViewController {
         })
     }
 }
-
-
-// Log in load pins when the map view shows.

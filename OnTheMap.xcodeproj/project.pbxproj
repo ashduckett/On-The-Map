@@ -21,6 +21,9 @@
 		493CFD211EBB526500B3E1C9 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493CFD201EBB526500B3E1C9 /* StudentInformation.swift */; };
 		493CFD231EBB7DED00B3E1C9 /* LocationDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493CFD221EBB7DED00B3E1C9 /* LocationDisplayViewController.swift */; };
 		493CFD251EBB7F6600B3E1C9 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493CFD241EBB7F6600B3E1C9 /* TableViewController.swift */; };
+		496528761EBFF0D30063C2F8 /* StudentInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496528751EBFF0D30063C2F8 /* StudentInformationModel.swift */; };
+		496528781EBFF9050063C2F8 /* MapListTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496528771EBFF9050063C2F8 /* MapListTabBarViewController.swift */; };
+		4965287A1EC090290063C2F8 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496528791EC090290063C2F8 /* UserModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +43,9 @@
 		493CFD201EBB526500B3E1C9 /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 		493CFD221EBB7DED00B3E1C9 /* LocationDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDisplayViewController.swift; sourceTree = "<group>"; };
 		493CFD241EBB7F6600B3E1C9 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		496528751EBFF0D30063C2F8 /* StudentInformationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformationModel.swift; sourceTree = "<group>"; };
+		496528771EBFF9050063C2F8 /* MapListTabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapListTabBarViewController.swift; sourceTree = "<group>"; };
+		496528791EC090290063C2F8 /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +82,11 @@
 				493CFD201EBB526500B3E1C9 /* StudentInformation.swift */,
 				493CFD221EBB7DED00B3E1C9 /* LocationDisplayViewController.swift */,
 				4915BAC11EBA519600641D2E /* LoginViewController.swift */,
+				496528791EC090290063C2F8 /* UserModel.swift */,
+				496528751EBFF0D30063C2F8 /* StudentInformationModel.swift */,
 				491BF2F01EBA67F500F87920 /* MapViewController.swift */,
 				4915BAC31EBA519600641D2E /* Main.storyboard */,
+				496528771EBFF9050063C2F8 /* MapListTabBarViewController.swift */,
 				49129D351EBCFF1200FAE5CF /* PostLocationViewController.swift */,
 				49378F421EBF43AC00CEFA13 /* UdacityAPIConvenience.swift */,
 				49378F441EBF43DE00CEFA13 /* ParseAPIConvenience.swift */,
@@ -166,12 +175,15 @@
 			files = (
 				493CFD211EBB526500B3E1C9 /* StudentInformation.swift in Sources */,
 				49378F3F1EBF402C00CEFA13 /* UdacityAPIClient.swift in Sources */,
+				496528761EBFF0D30063C2F8 /* StudentInformationModel.swift in Sources */,
 				49129D361EBCFF1200FAE5CF /* PostLocationViewController.swift in Sources */,
 				493CFD251EBB7F6600B3E1C9 /* TableViewController.swift in Sources */,
 				49378F411EBF41C000CEFA13 /* ParseAPIClient.swift in Sources */,
 				4915BAC21EBA519600641D2E /* LoginViewController.swift in Sources */,
+				4965287A1EC090290063C2F8 /* UserModel.swift in Sources */,
 				491BF2F11EBA67F500F87920 /* MapViewController.swift in Sources */,
 				49378F431EBF43AC00CEFA13 /* UdacityAPIConvenience.swift in Sources */,
+				496528781EBFF9050063C2F8 /* MapListTabBarViewController.swift in Sources */,
 				493CFD231EBB7DED00B3E1C9 /* LocationDisplayViewController.swift in Sources */,
 				49378F451EBF43DE00CEFA13 /* ParseAPIConvenience.swift in Sources */,
 				4915BAC01EBA519600641D2E /* AppDelegate.swift in Sources */,

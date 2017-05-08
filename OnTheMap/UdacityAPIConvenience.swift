@@ -29,7 +29,7 @@ class UdacityAPIConvenience {
                 if httpResponse == 403 {
                     completionHandler(false, nil, "User not recognised. Check and try again.")
                 } else {
-                    completionHandler(false, nil, "Server error.")
+                    completionHandler(false, nil, "Please check your Internet connection.")
                 }
                 return
             }
