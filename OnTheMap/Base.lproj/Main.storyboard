@@ -47,6 +47,9 @@
                                     <action selector="loginButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bs9-pi-oAz"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="OAL-MR-RX9">
+                                <rect key="frame" x="177" y="466" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -59,12 +62,15 @@
                             <constraint firstItem="ag0-1x-YTR" firstAttribute="top" secondItem="0KA-c8-xO9" secondAttribute="bottom" constant="8" id="TWD-R9-AP6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="q9J-mI-vTY" secondAttribute="trailing" id="UcK-uU-fgf"/>
                             <constraint firstAttribute="leadingMargin" secondItem="ag0-1x-YTR" secondAttribute="leading" id="XFq-XY-jSV"/>
+                            <constraint firstItem="OAL-MR-RX9" firstAttribute="top" secondItem="ag0-1x-YTR" secondAttribute="bottom" constant="8" id="d3d-MW-NoJ"/>
+                            <constraint firstItem="OAL-MR-RX9" firstAttribute="centerX" secondItem="ag0-1x-YTR" secondAttribute="centerX" id="f8o-q1-vgO"/>
                             <constraint firstAttribute="leadingMargin" secondItem="bPJ-IE-CN4" secondAttribute="leading" id="oWg-83-vPI"/>
                             <constraint firstItem="q9J-mI-vTY" firstAttribute="top" secondItem="bPJ-IE-CN4" secondAttribute="bottom" constant="8" id="rPf-c2-qGF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="bPJ-IE-CN4" secondAttribute="trailing" id="wp5-hC-W9z"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="OAL-MR-RX9" id="FEX-cd-G9B"/>
                         <outlet property="emailField" destination="q9J-mI-vTY" id="5g4-wl-fcB"/>
                         <outlet property="loginButton" destination="ag0-1x-YTR" id="ScC-aN-gT1"/>
                         <outlet property="passwordField" destination="0KA-c8-xO9" id="iKY-8o-SHL"/>

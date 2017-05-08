@@ -16,8 +16,9 @@ class MapViewController: LocationDisplayViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        
         map = mapView
+        
+
     }
     
     

@@ -67,6 +67,12 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate {
                 self.displayAlert(title: "Error", message: "You need to enter both a location and a URL")
             return
         }
+        
+        guard let _ = URL(string: url), UIApplication.shared.canOpenURL(URL(string: url)!) else {
+            displayAlert(title: "Error", message: "That URL is not valid")
+            return
+        }
+        
 
         activityIndicator.startAnimating()
         
@@ -74,13 +80,13 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate {
 
             if error != nil {
                 self.displayAlert(title: "Error", message: "Cannot find that location")
+                self.activityIndicator.stopAnimating()
             } else {
                 if let placemark = placemarks?.first {
                     //let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     
                     let coordinate = placemark.location!.coordinate
                     let annotation = MKPointAnnotation()
-                    //let title = appDelegate.loggedInStudent.fullName
                     let title = UserModel.user.fullName
                     
                     
@@ -128,8 +134,7 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate {
         // This can explode
         
         let coordinate = self.currentAnnotation.coordinate
-        //let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                
+        
         if !self.overwriting {
             
             ParseAPIConvenience.postNewStudentLocation(uniqueKey: UserModel.user.uniqueKey, firstName: UserModel.user.firstName, lastName: UserModel.user.lastName, mapString: self.addressField.text!, mediaURL: self.urlField.text!, latitude: coordinate.latitude, longitude: coordinate.longitude, completionHandler: {(success, error, response) in
@@ -146,19 +151,6 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate {
                         self.displayAlert(title: "Error", message: "Could not update post.")
                     } else {
                         
-                        // Otherwise, locate the item in the model and remove it so it won't display on the map without having to do another trip
-                        // to the server
-                        
-                        for (index, item) in self.students.studentCollection.enumerated() {
-                            print("Unique key of student location: \(item.uniqueKey). Index: \(index)")
-                            
-                            // How am I going to get hold of the latest of my own student location info?
-                            // It might be an idea to start with the right model and do this in the StudentInformationModelClass
-                            
-                        
-                        }
-
-                        
                         // Remove all of my own previous pin entries
                         let filtered = self.students.studentCollection.filter( { (item) in
                             return item.uniqueKey != UserModel.user.uniqueKey
@@ -166,16 +158,12 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate {
                         
                         self.students.studentCollection = filtered
                         
-                        //let firstName = appDelegate.loggedInStudent.firstName
                         let firstName = UserModel.user.firstName
-                        
-                        //let lastName = appDelegate.loggedInStudent.lastName
                         let lastName = UserModel.user.lastName
                         
                         let latitude = self.currentAnnotation.coordinate.latitude
                         let longitude = self.currentAnnotation.coordinate.longitude
                         let mediaURL = self.urlField.text!
-                        //let uniqueKey = appDelegate.uniqueKey
                         let uniqueKey = UserModel.user.uniqueKey
                         
                         var student = StudentInformation()
@@ -187,7 +175,7 @@ class PostLocationViewController: UIViewController, UITextFieldDelegate {
                         student.uniqueKey = uniqueKey!
                         
                         // Update the model
-                        self.students.studentCollection.append(student)
+                        self.students.studentCollection.insert(student, at: 0)
                         
                         // Display map and update the view
                         self.dismiss(animated: true, completion: nil)

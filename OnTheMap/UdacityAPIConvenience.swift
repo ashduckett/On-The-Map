@@ -36,5 +36,27 @@ class UdacityAPIConvenience {
             completionHandler(true, result, nil)
         })
     }
+    
+    static func getLoggedInUserData(userId: String, completionHandler: @escaping (_ success: Bool, _ errorString: String?, _ result: [String:AnyObject]?) -> Void) {
+        UdacityAPIClient.performGETRequest(baseUrl: "https://www.udacity.com/api/", pathExtension: "users/\(userId)",
+            completionHandler: {(success, errorString, results, response) in
+                
+                guard let user = results!["user"],
+                    let firstName = user["first_name"] as? String,
+                    let lastName = user["last_name"] as? String,
+                    let uniqueKey = user["key"] as? String else {
+                        completionHandler(false, "Could not get user information", nil)
+                        return
+                }
+                
+                UserModel.user = UserModel()
+                UserModel.user.firstName = firstName
+                UserModel.user.lastName = lastName
+                UserModel.user.uniqueKey = uniqueKey
+                
+                // If we get this far, we have successfully got the data out
+                completionHandler(true, nil, user as? [String:AnyObject])
+        })
 
+    }
 }

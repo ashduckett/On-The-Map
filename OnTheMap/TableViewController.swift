@@ -16,6 +16,10 @@ class TableViewController: LocationDisplayViewController, UITableViewDelegate, U
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StudentCell")!
         cell.textLabel?.text = students.studentCollection[indexPath.row].fullName
@@ -33,6 +37,9 @@ class TableViewController: LocationDisplayViewController, UITableViewDelegate, U
         if let url = URL(string: toOpen) {
             app.open(url, options: [:], completionHandler: nil)
         }
+        
+        // Deselect row after opening url
+        tableView.deselectRow(at: indexPath, animated: true)
     
     }
 }

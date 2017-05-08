@@ -13,6 +13,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var students: StudentInformationModel!
     
@@ -106,11 +107,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         loginButton.isEnabled = false
         loginButton.setTitle("Logging in", for: .disabled)
         
+        activityIndicator.startAnimating()
         UdacityAPIConvenience.getSessionId(username: emailText, password: passwordText, completionHandler: {(success, result, errorString) in
             // If unsuccessful login, tell the user
             if let errorString = errorString {
                 // Alert error string. Might be bad credentials, might be bad connection.
-                self.displayAlert(title: "Error", message: errorString)
+            
+                DispatchQueue.main.async {
+                    self.displayAlert(title: "Error", message: errorString)
+                    self.activityIndicator.stopAnimating()
+                }
             } else {
                 // If we were successful, then the user exists
                 let session = result!["session"] as! [String:String]
@@ -132,21 +138,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
                             
                             self.students = StudentInformationModel(students: result!["results"] as! [[String:AnyObject]])
                             
-                            // This should be called getLoggedInUserData
-                            UdacityAPIClient.performGETRequest(baseUrl: "https://www.udacity.com/api/", pathExtension: "users/\(userId)",
-                                completionHandler: {(success, errorString, results, response) in
-                                    
-                                guard let user = results!["user"],
-                                    let firstName = user["first_name"] as? String,
-                                    let lastName = user["last_name"] as? String,
-                                    let uniqueKey = user["key"] as? String else {
-                                        return
-                                }
+                            UdacityAPIConvenience.getLoggedInUserData(userId: userId, completionHandler: {(success, errorString, results) in
                                 
-                                UserModel.user = UserModel()
-                                UserModel.user.firstName = firstName
-                                UserModel.user.lastName = lastName
-                                UserModel.user.uniqueKey = uniqueKey
+                                guard error == nil else {
+                                    print(errorString!)
+                                    return
+                                }
                                 
                                 for student in (self.students?.studentCollection)! {
                                     if UserModel.user.uniqueKey == student.uniqueKey {
@@ -159,7 +156,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                                         break
                                     }
                                 }
-
+                                
                                 // Filter out everything that's not mine, or if it is mine, make sure it's the latest.
                                 let filtered = self.students.studentCollection.filter({(item) in
                                     return item.uniqueKey != UserModel.user.uniqueKey || (item.objectId == UserModel.user.latestObjectId)
@@ -169,6 +166,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                                 
                                 // Here we are displaying the tab bar controller
                                 DispatchQueue.main.async {
+                                    
+                                    self.activityIndicator.stopAnimating()
                                     let controller: MapListTabBarController
                                     
                                     controller = self.storyboard?.instantiateViewController(withIdentifier: "ListMapSelectionView") as! MapListTabBarController
